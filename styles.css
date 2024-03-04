@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-image: url(background-bubbles.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  font-family: "Roboto Condensed", sans-serif;
+  color: white;
+}
