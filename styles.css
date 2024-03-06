@@ -4,15 +4,85 @@
   box-sizing: border-box;
 }
 
-
 body {
+  margin: 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+
   background-image: url(background-bubbles.jpg);
   background-repeat: no-repeat;
   background-size: cover;
 
   font-family: "Roboto Condensed", sans-serif;
-  color: white;
+  font-size: 5rem;
+  color: #68271F;
+
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+
+  grid-column: 3 / span 8;
+}
+
+.digits {
+  display: flex;
+  column-gap: 5.6rem;
+}
+
+.digits__digit,
+.btn--start {
+  background-color: rgb(255 255 255 / 40%);
+  backdrop-filter: blur(10px);
+
+  border: 1px solid gray;
+  border-radius: 8px;
+
+  line-height: 2;
+}
+
+.digits__digit {
+  text-align: center;
+  width: 3ch;
+}
+
+.btn--start {
+  display: block;
+  max-width: 400px;
+  padding-left: 4rem;
+  padding-right: 4rem;
+  text-transform: uppercase;
+}
+
+.digits>input,
+.controls>button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+@media only screen and (max-width: 450px) {
+  .controls {
+    grid-column: 1 / span 12;
+    align-items: stretch;
+  }
+
+  .digits {
+    column-gap: 0;
+    justify-content: space-between;
+  }
+
+  .digits__digit {
+    width: 2.5ch;
+  }
+
+  .btn--start {
+    max-width: initial;
+  }
 }
