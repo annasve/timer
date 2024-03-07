@@ -65,6 +65,7 @@ body {
   font-family: inherit;
   font-size: inherit;
   color: inherit;
+  cursor: pointer;
 }
 
 @media only screen and (max-width: 450px) {
