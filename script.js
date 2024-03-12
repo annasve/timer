@@ -13,64 +13,73 @@ const DOMDigits = (hr, min, sec) => {
 };
 
 //---validace vstupů, které uživatel píše
-let hours, minutes, seconds;
 const validateInputs = (evt) => {
-  if (Number(evt.target.value) >= 0 && Number(evt.target.value) < 60) {
-    hours = Number(hoursElm.value);
-    minutes = Number(minutesElm.value);
-    seconds = Number(secondsElm.value);
-  } else {
+  if (!isPositiveNumber(evt.target.value) || Number(evt.target.value) > 59) {
     evt.target.value = '';
     alert('Zadávejte pouze číslice 0-59.');
   }
 };
 
+function isPositiveNumber(value) {
+  return /^\d+$/.test(value);
+}
+
 //---akce tlačítka ve formuláři
 const startCountdown = (evt) => {
   evt.preventDefault();
-  if (hours !== undefined || minutes !== undefined || seconds !== undefined) {
-    inputsElm.forEach((input) => {
-      input.disabled = true;
-    });
 
-    //--první nastavení v DOM (ihned po stisknutí tlačítka "start")
+  let hours = Number(hoursElm.value);
+  let minutes = Number(minutesElm.value);
+  let seconds = Number(secondsElm.value);
+
+  //--kontrola, aby uživatel nespustil časovač, když je vše 0 / ""
+  if (hours === 0 && minutes === 0 && seconds === 0) {
+    return;
+  }
+
+  inputsElm.forEach((input) => {
+    input.disabled = true;
+  });
+  document.querySelector('.btn--start').disabled = true;
+
+  //--první nastavení v DOM (ihned po stisknutí tlačítka "start")
+  DOMDigits(hours, minutes, seconds);
+
+  //---funkce na odpočet
+  const countdown = () => {
+    //--snižování sekund
+    seconds -= 1;
+
+    //--snižování minut
+    if (seconds === -1) {
+      minutes -= 1;
+      seconds = 59;
+    }
+
+    //snižování hodin
+    if (minutes === -1) {
+      hours -= 1;
+      minutes = 59;
+    }
+
+    //---vypsání hodnot do DOM
     DOMDigits(hours, minutes, seconds);
 
-    //---funkce na odpočet
-    const countdown = () => {
-      //--snižování sekund
-      seconds -= 1;
+    //--zazvonění budíku a vypnutí
+    if (hours === 0 && minutes === 0 && seconds === 0) {
+      clearInterval(count);
+      audioElm.play();
 
-      //--snižování minut
-      if (seconds === -1) {
-        minutes -= 1;
-        seconds = 59;
-      }
+      inputsElm.forEach((input) => {
+        input.value = '';
+        input.disabled = false;
+      });
+      document.querySelector('.btn--start').disabled = false;
+    }
+  };
 
-      //snižování hodin
-      if (minutes === -1) {
-        hours -= 1;
-        minutes = 59;
-      }
-
-      //---vypsání hodnot do DOM
-      DOMDigits(hours, minutes, seconds);
-
-      //--zazvonění budíku a vypnutí
-      if (hours === 0 && minutes === 0 && seconds === 0) {
-        clearInterval(count);
-        audioElm.play();
-
-        inputsElm.forEach((input) => {
-          input.value = '';
-          input.disabled = false;
-        });
-      }
-    };
-
-    // spuštění fce countdown nastává de facto v tomto kroku
-    const count = setInterval(countdown, 1000);
-  }
+  // spuštění fce countdown nastává de facto v tomto kroku
+  const count = setInterval(countdown, 1000);
 };
 
 document.querySelector('form').addEventListener('submit', startCountdown);
@@ -79,7 +88,7 @@ inputsElm.forEach((input) => {
   input.addEventListener('input', validateInputs);
 });
 
-//--F5 refresh vynutí vymazání obsahu ve všech prvcích input
+//--F5 vynutí vymazání obsahu ve všech prvcích input
 document.addEventListener('keyup', (evt) => {
   evt.preventDefault();
   if (evt.key === 'F5') {
